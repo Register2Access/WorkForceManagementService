@@ -29,8 +29,14 @@ namespace WorkForceManagementService.Repositories.Services
             if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
                 throw new InvalidOperationException("Email already exists");
 
+            if (!Enum.TryParse<UserRole>(registerDto.Role, true, out var userRole))
+            {
+                throw new ArgumentException($"Invalid role: {registerDto.Role}. Valid roles are: {string.Join(", ", Enum.GetNames<UserRole>())}");
+            }
+
             var user = _mapper.Map<User>(registerDto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.PasswordHash);
+            user.Role = userRole;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
