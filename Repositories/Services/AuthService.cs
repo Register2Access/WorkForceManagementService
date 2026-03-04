@@ -56,9 +56,6 @@ namespace WorkForceManagementService.Repositories.Services
 
         private string GenerateJwtToken(User user)
         {
-            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenSettings:SecretKey"]!));
-            //var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             List<Claim> claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
@@ -82,16 +79,6 @@ namespace WorkForceManagementService.Repositories.Services
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             SecurityToken token = handler.CreateToken(tokenDescriptor);
             return handler.WriteToken(token);
-
-            //var token = new JwtSecurityToken(
-            //issuer: _configuration["Jwt:Issuer"],
-            //audience: _configuration["Jwt:Audience"],
-            //claims: claims,
-            //expires: tokenExpiration,
-            //signingCredentials: creds
-            //);
-
-            //return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
