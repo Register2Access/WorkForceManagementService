@@ -17,7 +17,6 @@ builder.Services.AddDbContext<WFMSContext>(options =>
 );
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 // Add services to the container.
