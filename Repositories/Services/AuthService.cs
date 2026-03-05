@@ -53,18 +53,18 @@ namespace WorkForceManagementService.Repositories.Services
             return user.UserId;
         }
 
-        public async Task<String> Login(string email, string password)
+        public async Task<string> Login(string email, string password)
         {
             var user = await _context.Users
-            .SingleOrDefaultAsync(u => u.Email == email);
+                .SingleOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
-                throw new Exception("User not exist");
+                throw new InvalidOperationException("User does not exist");
 
             var verified = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
 
             if (!verified)
-                throw new Exception("Invalid credentials");
+                throw new UnauthorizedAccessException("Invalid email or password");
 
             return GenerateJwtToken(user);
         }

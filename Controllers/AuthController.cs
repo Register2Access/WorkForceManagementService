@@ -20,25 +20,77 @@ namespace WorkForceManagementService.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginRequest loginRequest)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            var response = await _authService.Login(loginRequest.Email, loginRequest.Password);
-            if(!string.IsNullOrEmpty(response))
+            try
             {
+                var response = await _authService.Login(loginRequest.Email, loginRequest.Password);
+
                 return Ok(new { token = response });
             }
-            return StatusCode((int)HttpStatusCode.Unauthorized, new Error { Code = "4010" , Message = $"Login failed, invalid email or password." });
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new Error
+                {
+                    Code = "4040",
+                    Message = ex.Message
+                });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new Error
+                {
+                    Code = "4010",
+                    Message = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Error
+                {
+                    Code = "5000",
+                    Message = "Internal server error"
+                });
+            }
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest registerDto)
         {
-            var response = await _authService.Register(registerDto);
-            if (response > 0)
+            try
             {
-                return Ok(new { Message = "User registered successfully.", UserId = response });
+                var response = await _authService.Register(registerDto);
+
+                return Ok(new
+                {
+                    Message = "User registered successfully.",
+                    UserId = response
+                });
             }
-            return StatusCode((int)HttpStatusCode.BadRequest, new Error { Code = "4001", Message = $"Registration failed." });
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new Error
+                {
+                    Code = "4002",
+                    Message = ex.Message
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new Error
+                {
+                    Code = "4003",
+                    Message = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Error
+                {
+                    Code = "5000",
+                    Message = "Internal server error"
+                });
+            }
         }
     }
 }
