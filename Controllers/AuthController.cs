@@ -31,7 +31,7 @@ namespace WorkForceManagementService.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterRequest registerDto)
         {
             var response = await _authService.Register(registerDto);
             if (response > 0)

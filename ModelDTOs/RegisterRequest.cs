@@ -3,7 +3,7 @@ using WorkForceManagementService.Entities;
 
 namespace WorkForceManagementService.ModelDTOs
 {
-    public class RegisterDto
+    public class RegisterRequest
     {
         [Required(ErrorMessage = "Name is required")]
         public string UserName { get; set; } = null!;
@@ -16,5 +16,10 @@ namespace WorkForceManagementService.ModelDTOs
         public string PasswordHash { get; set; } = null!;
         [Required(ErrorMessage = "Role is required")]
         public string Role { get; set; } = null!;
+        [Required(ErrorMessage = "Department is required")]
+        public string Department { get; set; } = null!;
+        [Required(ErrorMessage = "Designation is required")]
+        public string Designation {  get; set; } = null!;
+
     }
 }

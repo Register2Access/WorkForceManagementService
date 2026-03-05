@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WorkForceManagementService.Data;
@@ -11,9 +12,11 @@ using WorkForceManagementService.Data;
 namespace WorkForceManagementService.Migrations
 {
     [DbContext(typeof(WFMSContext))]
-    partial class WFMSContextModelSnapshot : ModelSnapshot
+    [Migration("20260305064956_update fields")]
+    partial class updatefields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -22,21 +22,30 @@ namespace WorkForceManagementService.Repositories.Services
             _mapper = mapper;
             _configuration = configuration;
         }
-        public async Task<int> Register(RegisterDto registerDto)
+        public async Task<int> Register(RegisterRequest registerDto)
         {
             if (registerDto == null) throw new ArgumentNullException(nameof(registerDto));
 
             if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
                 throw new InvalidOperationException("Email already exists");
 
-            if (!Enum.TryParse<UserRole>(registerDto.Role, true, out var userRole))
+            var roleValue = registerDto.Role.Replace(" ", "");
+            if (!Enum.TryParse<UserRole>(roleValue, true, out var userRole))
             {
                 throw new ArgumentException($"Invalid role: {registerDto.Role}. Valid roles are: {string.Join(", ", Enum.GetNames<UserRole>())}");
+            }
+
+            var departmentValue = registerDto.Department.Replace(" ", "");
+            if(!Enum.TryParse<Department>(departmentValue, true, out var department))
+            {
+                throw new ArgumentException($"Invalid Department : {registerDto.Department}. Valid departments are:{string.Join(",", Enum.GetNames<Department>())}");
             }
 
             var user = _mapper.Map<User>(registerDto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.PasswordHash);
             user.Role = userRole;
+            user.Department = department;
+            user.Designation = registerDto.Designation;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
