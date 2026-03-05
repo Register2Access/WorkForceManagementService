@@ -17,6 +17,7 @@ builder.Services.AddDbContext<WFMSContext>(options =>
 );
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 // Add services to the container.
@@ -103,14 +104,14 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
-//app.UseSwagger();
-//app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
 //app.UseHttpsRedirection();
@@ -119,7 +120,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
-//app.Urls.Add($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+app.Urls.Add($"http://*:{port}");
 
 app.Run();
